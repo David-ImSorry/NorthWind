@@ -1,15 +1,13 @@
-﻿HostApplicationBuilder Builder = Host.CreateApplicationBuilder();
+﻿﻿HostApplicationBuilder Builder = Host.CreateApplicationBuilder();
 
-Builder.Services.AddSingleton<IUserActionWriter, ConsoleWriter>();
-Builder.Services.AddSingleton<IUserActionWriter, DebugWriter>();
-Builder.Services.AddSingleton<AppLogger>();
-Builder.Services.AddSingleton<ProductService>();
+Builder.Services.AddNorthWindServices();
+
 using IHost AppHost = Builder.Build();
 
-AppLogger Logger = AppHost.Services.GetRequiredService<AppLogger>();
+IAppLogger Logger = AppHost.Services.GetRequiredService<IAppLogger>();
 Logger.WriteLog("Application Started.");
 
-ProductService Service = AppHost.Services.GetRequiredService<ProductService>();
+IProductService Service = AppHost.Services.GetRequiredService<IProductService>();
 Service.Add("Demo", "Azúcar Refinada");
 
 /*     IMPLEMENTACIONES DE TRES PRINCIPIOS IMPORTANTES
