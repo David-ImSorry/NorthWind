@@ -1,23 +1,17 @@
-﻿using Microsoft.Extensions.Hosting;
-using NorthWind.ConsoleApp.Services;
-using NorthWind.Entities.Interfaces;
-using NorthWind.Writers;
-using Microsoft.Extensions.DependencyInjection;
+﻿HostApplicationBuilder Builder = Host.CreateApplicationBuilder();
 
-HostApplicationBuilder Builder = Host.CreateApplicationBuilder();
+Builder.Services.AddSingleton<IUserActionWriter, ConsoleWriter>();
 Builder.Services.AddSingleton<IUserActionWriter, DebugWriter>();
 Builder.Services.AddSingleton<AppLogger>();
 Builder.Services.AddSingleton<ProductService>();
-using var AppHost = Builder.Build();
+using IHost AppHost = Builder.Build();
 
-IUserActionWriter Writer = new FileWriter();
-
-IUserActionWriter Writer = new ConsoleWriter();
-
-AppLogger Logger = new AppLogger(Writer);
+AppLogger Logger = AppHost.Services.GetRequiredService<AppLogger>();
 Logger.WriteLog("Application Started.");
-ProductService Service = new ProductService(Writer);
+
+ProductService Service = AppHost.Services.GetRequiredService<ProductService>();
 Service.Add("Demo", "Azúcar Refinada");
+
 /*     IMPLEMENTACIONES DE TRES PRINCIPIOS IMPORTANTES
  * AppLogger y los Writers: Responsabilidad Única
  * AppLogger: Abierto pero Cerrado
